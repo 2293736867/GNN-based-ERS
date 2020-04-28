@@ -1,41 +1,9 @@
-# GAT
-Graph Attention Networks (Veličković *et al.*, ICLR 2018): [https://arxiv.org/abs/1710.10903](https://arxiv.org/abs/1710.10903)
+# Pytorch Graph Attention Network
 
-GAT layer            |  t-SNE + Attention coefficients on Cora
-:-------------------------:|:-------------------------:
-![](https://camo.githubusercontent.com/4fe1a90e67d17a2330d7cfcddc930d5f7501750c/68747470733a2f2f7777772e64726f70626f782e636f6d2f732f71327a703170366b37396a6a6431352f6761745f6c617965722e706e673f7261773d31)  |  ![](https://camo.githubusercontent.com/a1ad7645e034ba75ab4d3380a631fdfc00783553/687474703a2f2f7777772e636c2e63616d2e61632e756b2f7e70763237332f696d616765732f6761745f74736e652e6a7067)
+This is a pytorch implementation of the Graph Attention Network (GAT)
+model presented by Veličković et. al (2017, https://arxiv.org/abs/1710.10903).
 
-## Overview
-Here we provide the implementation of a Graph Attention Network (GAT) layer in TensorFlow, along with a minimal execution example (on the Cora dataset). The repository is organised as follows:
-- `data/` contains the necessary dataset files for Cora;
-- `models/` contains the implementation of the GAT network (`gat.py`);
-- `pre_trained/` contains a pre-trained Cora model (achieving 84.4% accuracy on the test set);
-- `utils/` contains:
-    * an implementation of an attention head, along with an experimental sparse version (`layers.py`);
-    * preprocessing subroutines (`process.py`);
-    * preprocessing utilities for the PPI benchmark (`process_ppi.py`).
-
-Finally, `execute_cora.py` puts all of the above together and may be used to execute a full training run on Cora.
-
-## Sparse version
-An experimental sparse version is also available, working only when the batch size is equal to 1.
-The sparse model may be found at `models/sp_gat.py`.
-
-You may execute a full training run of the sparse model on Cora through `execute_cora_sparse.py`.
-
-## Dependencies
-
-The script has been tested running under Python 3.5.2, with the following packages installed (along with their dependencies):
-
-- `numpy==1.14.1`
-- `scipy==1.0.0`
-- `networkx==2.1`
-- `tensorflow-gpu==1.6.0`
-
-In addition, CUDA 9.0 and cuDNN 7 have been used.
-
-## Reference
-If you make advantage of the GAT model in your research, please cite the following in your manuscript:
+The repo has been forked initially from https://github.com/tkipf/pygcn. The official repository for the GAT (Tensorflow) is available in https://github.com/PetarV-/GAT. Therefore, if you make advantage of the pyGAT model in your research, please cite the following:
 
 ```
 @article{
@@ -49,9 +17,22 @@ If you make advantage of the GAT model in your research, please cite the followi
 }
 ```
 
-You may also be interested in the following unofficial ports of the GAT model:
-- \[Keras\] [keras-gat](https://github.com/danielegrattarola/keras-gat), currently under development by [Daniele Grattarola](https://github.com/danielegrattarola);
-- \[PyTorch\] [pyGAT](https://github.com/Diego999/pyGAT), currently under development by [Diego Antognini](https://github.com/Diego999).
+The branch **master** contains the implementation from the paper. The branch **similar_impl_tensorflow** the implementation from the official Tensorflow repository.
 
-## License
-MIT
+# Performances
+
+For the branch **master**, the training of the transductive learning on Cora task on a Titan Xp takes ~0.9 sec per epoch and 10-15 minutes for the whole training (~800 epochs). The final accuracy is between 84.2 and 85.3 (obtained on 5 different runs). For the branch **similar_impl_tensorflow**, the training takes less than 1 minute and reach ~83.0.
+
+A small note about initial sparse matrix operations of https://github.com/tkipf/pygcn: they have been removed. Therefore, the current model take ~7GB on GRAM.
+
+# Sparse version GAT
+
+We develop a sparse version GAT using pytorch. There are numerically instability because of softmax function. Therefore, you need to initialize carefully. To use sparse version GAT, add flag `--sparse`. The performance of sparse version is similar with tensorflow. On a Titan Xp takes 0.08~0.14 sec.
+
+# Requirements
+
+pyGAT relies on Python 3.5 and PyTorch 0.4.1 (due to torch.sparse_coo_tensor).
+
+# Issues/Pull Requests/Feedbacks
+
+Don't hesitate to contact for any feedback or create issues/pull requests.
